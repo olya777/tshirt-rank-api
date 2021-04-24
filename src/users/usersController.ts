@@ -10,6 +10,7 @@ import {
     Route,
     Response,
     SuccessResponse,
+    Example
 } from "tsoa";
 import { User } from "./user";
 import { UsersService, UserCreationParams } from "./usersService";
@@ -27,6 +28,13 @@ export class UsersController extends Controller {
    * @param userId The user's identifier
    * @param name Provide a username to display
    */
+    @Example<User>({
+        id: "52907745-7672-470e-a803-a2f8feb52944",
+        name: "tsoa user",
+        email: "hello@tsoa.com",
+        phoneNumbers: [],
+        status: "Happy",
+    })
     @Get("{userId}")
     public async getUser(
         @Path() userId: UUID,
@@ -35,7 +43,15 @@ export class UsersController extends Controller {
         return new UsersService().get(userId, name);
     }
 
-    @Response<ValidateErrorJSON>(422, "Validation Failed")
+    @Response<ValidateErrorJSON>(422, "Validation Failed", {
+        message: "Validation failed",
+        details: {
+            requestBody: {
+                message: "id is an excess property and therefore not allowed",
+                value: "52907745-7672-470e-a803-a2f8feb52944",
+            },
+        },
+    })
     @SuccessResponse("201", "Created") // Custom success response
     @Post()
     public async createUser(
