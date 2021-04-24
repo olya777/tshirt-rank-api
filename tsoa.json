@@ -3,10 +3,10 @@
     "noImplicitAdditionalProperties": "throw-on-extras",
     "controllerPathGlobs": ["src/**/*Controller.ts"],
     "spec": {
-      "outputDirectory": "build",
-      "specVersion": 3
+        "outputDirectory": "build",
+        "specVersion": 3
     },
     "routes": {
-      "routesDir": "build"
+        "routesDir": "build"
     }
-  }
+}

@@ -1,5 +1,7 @@
-import express from "express";
+import express, { Response, Request } from "express";
 import bodyParser from "body-parser";
+import swaggerUi from "swagger-ui-express";
+
 import { RegisterRoutes } from "../build/routes";
 
 export const app = express();
@@ -11,5 +13,11 @@ app.use(
     })
 );
 app.use(bodyParser.json());
+
+app.use("/docs", swaggerUi.serve, async (_req: Request, res: Response) => {
+    return res.send(
+        swaggerUi.generateHTML(await import("../build/swagger.json"))
+    );
+});
 
 RegisterRoutes(app);
