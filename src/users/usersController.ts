@@ -1,3 +1,5 @@
+// import { UUID } from 'lib/types/core'; // Doesn't work if using path defined in tsconfig
+import { UUID } from '../lib/types/core';
 import {
     Body,
     Controller,
@@ -19,9 +21,15 @@ export interface ValidateErrorJSON {
 
 @Route("users")
 export class UsersController extends Controller {
+    /**
+   * Retrieves the details of an existing user.
+   * Supply the unique user ID from either and receive corresponding user details.
+   * @param userId The user's identifier
+   * @param name Provide a username to display
+   */
     @Get("{userId}")
     public async getUser(
-        @Path() userId: number,
+        @Path() userId: UUID,
         @Query() name?: string
     ): Promise<User> {
         return new UsersService().get(userId, name);
