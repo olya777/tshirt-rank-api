@@ -1,5 +1,3 @@
-// import { UUID } from 'lib/types/core'; // Doesn't work if using path defined in tsconfig
-import { UUID } from '../lib/types/core';
 import {
     Body,
     Controller,
@@ -12,6 +10,10 @@ import {
     SuccessResponse,
     Example
 } from "tsoa";
+import { injectable } from 'tsyringe';
+
+// import { UUID } from 'lib/types/core'; // Doesn't work if using path defined in tsconfig
+import { UUID } from '../lib/types/core';
 import { User } from "./user";
 import { UsersService, UserCreationParams } from "./usersService";
 
@@ -20,8 +22,13 @@ export interface ValidateErrorJSON {
     details?: { [name: string]: unknown };
 }
 
+@injectable()
 @Route("users")
 export class UsersController extends Controller {
+    constructor(private usersService: UsersService) {
+        super();
+    }
+
     /**
    * Retrieves the details of an existing user.
    * Supply the unique user ID from either and receive corresponding user details.
@@ -40,7 +47,7 @@ export class UsersController extends Controller {
         @Path() userId: UUID,
         @Query() name?: string
     ): Promise<User> {
-        return new UsersService().get(userId, name);
+        return this.usersService.get(userId, name);
     }
 
     @Response<ValidateErrorJSON>(422, "Validation Failed", {
@@ -58,7 +65,7 @@ export class UsersController extends Controller {
         @Body() requestBody: UserCreationParams
     ): Promise<void> {
         this.setStatus(201); // set return status 201
-        new UsersService().create(requestBody);
+        this.usersService.create(requestBody);
         return;
     }
 }

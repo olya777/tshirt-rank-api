@@ -1,9 +1,12 @@
+import { singleton } from 'tsyringe';
+
 import { UUID } from 'lib/types/core';
 import { User } from "./user";
 
 // A post request should not contain an id.
 export type UserCreationParams = Pick<User, "email" | "name" | "phoneNumbers">;
 
+@singleton()
 export class UsersService {
     public get(id: UUID, name?: string): User {
         return {
